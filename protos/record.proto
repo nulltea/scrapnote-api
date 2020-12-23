@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/timoth-y/scrapnote-api/record/api/proto";
+
+message Record {
+  string uniqueID = 1;
+  bytes content = 2;
+  string sourceURL = 3;
+  google.protobuf.Timestamp addedAt = 4;
+}
+
+service RecordService {
+  rpc Get(RecordFilter) returns (RecordResponse) {}
+  rpc Count(RecordFilter) returns (RecordResponse) {}
+  rpc Post(Record) returns (RecordResponse) {}
+  rpc Edit(Record) returns (RecordResponse) {}
+  rpc Delete(RecordFilter) returns (RecordResponse) {}
+}
+
+message RecordFilter {
+  repeated string recordID = 1;
+  repeated string topicID = 2;
+}
+
+message RecordResponse {
+  repeated Record records = 1;
+  int64 count = 2;
+}
