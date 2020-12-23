@@ -1,6 +1,6 @@
 package service
 
-import "github.com/timoth-y/scrapnote-api/record/core/model"
+import "github.com/timoth-y/scrapnote-api/records/core/model"
 
 type RecordSerializer interface {
 	Decode(input []byte) (*model.Record, error)

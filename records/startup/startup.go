@@ -6,8 +6,8 @@ import (
 	di "go.kicksware.com/api/service-common/container"
 	"go.kicksware.com/api/service-common/core"
 
-	"github.com/timoth-y/scrapnote-api/record/config"
-	cnf "github.com/timoth-y/scrapnote-api/record/container/config"
+	"github.com/timoth-y/scrapnote-api/records/config"
+	cnf "github.com/timoth-y/scrapnote-api/records/container/config"
 )
 
 func InitializeServer() (srv core.Server) {

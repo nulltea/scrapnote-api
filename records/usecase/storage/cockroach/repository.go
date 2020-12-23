@@ -10,8 +10,8 @@ import (
 	"go.kicksware.com/api/service-common/config"
 	"go.kicksware.com/api/service-common/util"
 
-	"github.com/timoth-y/scrapnote-api/record/core/model"
-	"github.com/timoth-y/scrapnote-api/record/core/repo"
+	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/records/core/repo"
 )
 
 type repository struct {

@@ -1,6 +1,6 @@
 package service
 
-import "github.com/timoth-y/scrapnote-api/record/core/model"
+import "github.com/timoth-y/scrapnote-api/edge/core/model"
 
 type RecordService interface {
 	GetOne(id string) (*model.Record, error)

@@ -17,8 +17,8 @@ import (
 	"github.com/golang/glog"
 	"go.kicksware.com/api/service-common/core/meta"
 
-	"github.com/timoth-y/scrapnote-api/record/core/model"
-	"github.com/timoth-y/scrapnote-api/record/core/repo"
+	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/records/core/repo"
 )
 
 type repository struct {

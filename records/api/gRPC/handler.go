@@ -5,8 +5,8 @@ import (
 
 	"go.kicksware.com/api/service-common/core"
 
-	"github.com/timoth-y/scrapnote-api/record/api/gRPC/proto"
-	"github.com/timoth-y/scrapnote-api/record/core/service"
+	"github.com/timoth-y/scrapnote-api/records/api/gRPC/proto"
+	"github.com/timoth-y/scrapnote-api/records/core/service"
 )
 
 //go:generate protoc --proto_path=../../protos --go_out=plugins=grpc,paths=source_relative:proto/. record.proto

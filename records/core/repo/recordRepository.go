@@ -1,6 +1,6 @@
 package repo
 
-import "github.com/timoth-y/scrapnote-api/record/core/model"
+import "github.com/timoth-y/scrapnote-api/records/core/model"
 
 type RecordRepository interface {
 	RetrieveOne(id string) (*model.Record, error)

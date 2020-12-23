@@ -9,9 +9,9 @@ import (
 	"go.kicksware.com/api/service-common/config"
 	"go.kicksware.com/api/service-common/core/meta"
 
-	"github.com/timoth-y/scrapnote-api/record/core/model"
-	"github.com/timoth-y/scrapnote-api/record/core/service"
-	"github.com/timoth-y/scrapnote-api/record/usecase/serializer/json"
+	"github.com/timoth-y/scrapnote-api/edge/core/model"
+	"github.com/timoth-y/scrapnote-api/edge/core/service"
+	"github.com/timoth-y/scrapnote-api/edge/usecase/serializer/json"
 )
 
 type Handler struct {

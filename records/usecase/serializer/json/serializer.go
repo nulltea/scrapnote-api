@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/timoth-y/scrapnote-api/record/core/model"
-	"github.com/timoth-y/scrapnote-api/record/core/service"
+	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/records/core/service"
 )
 
 type serializer struct{}

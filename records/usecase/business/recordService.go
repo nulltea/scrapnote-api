@@ -1,10 +1,10 @@
 package business
 
 import (
-	"github.com/timoth-y/scrapnote-api/record/config"
-	"github.com/timoth-y/scrapnote-api/record/core/model"
-	"github.com/timoth-y/scrapnote-api/record/core/repo"
-	"github.com/timoth-y/scrapnote-api/record/core/service"
+	"github.com/timoth-y/scrapnote-api/records/config"
+	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/records/core/repo"
+	"github.com/timoth-y/scrapnote-api/records/core/service"
 )
 
 type recordService struct {

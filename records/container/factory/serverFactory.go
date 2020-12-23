@@ -5,7 +5,7 @@ import (
 	"go.kicksware.com/api/service-common/core"
 	"go.kicksware.com/api/service-common/server"
 
-	"github.com/timoth-y/scrapnote-api/record/config"
+	"github.com/timoth-y/scrapnote-api/records/config"
 )
 
 func ProvideServer(config config.ServiceConfig, router chi.Router) core.Server {

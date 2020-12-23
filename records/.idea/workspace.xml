@@ -2,15 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a55d68b-2bab-45e2-a624-ab10befc48bc" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/.idea/protos.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../protos/record.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../edge/config/serviceConfig.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/config/serviceConfig.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/api/REST/handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/api/REST/handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/container/config/containerConfig.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/container/config/containerConfig.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/container/factory/edgeHandlerFactory.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/container/factory/edgeHandlerFactory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/container/factory/repositoryFactory.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/container/factory/repositoryFactory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/container/factory/serverFactory.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/container/factory/serverFactory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/container/factory/usecaseServiceFacrory.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/container/factory/usecaseServiceFacrory.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/core/service/recordService.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/core/service/recordService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/startup/startup.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/startup/startup.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/usecase/business/recordService.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/usecase/business/recordService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../edge/usecase/serializer/json/serializer.go" beforeDir="false" afterPath="$PROJECT_DIR$/../edge/usecase/serializer/json/serializer.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
