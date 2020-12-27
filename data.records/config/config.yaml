@@ -1,0 +1,25 @@
+commonConfig:
+  host: localhost:8181
+  apiEndpointFormat: http://%s:8080/%s
+  rpcEndpointFormat: rpc.kicksware.com:443
+eventsConfig:
+  URL: amqps://root:12345rabbitvswolf@amqp.kicksware.com:443
+  TLS:
+    enableTLS: true
+    certFile: /source/certs/rabbitmq/ca.crt
+cockroachConfig:
+  URL: postgres://:@postgres:5432/sneakerResaleDB
+  database: scrapNoteDB
+  collection: References
+  timeout: 30
+mongoConfig:
+  URL: mongodb://db.kicksware.com:443
+  TLS:
+    enableTLS: true
+    certFile: /source/certs/mongo/ca.pem
+    keyFile: /source/certs/mongo/mongo.pem
+  database: scrapNoteDB
+  collection: records
+  login: root
+  password: greenJordans
+  timeout: 30

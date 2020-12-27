@@ -1,0 +1,19 @@
+type Record {
+  uniqueID: ID!
+  content: String!
+  sourceURL: String!
+  markerURL: String!
+}
+
+type Query {
+  records: [Record!]!
+}
+
+input RecordInput {
+  uniqueID: ID!
+  content: String!
+}
+
+type Mutation {
+  modifyRecord(input: RecordInput!): Record!
+}
