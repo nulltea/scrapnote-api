@@ -5,7 +5,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/data.records/core/model"
 
 	"github.com/timoth-y/scrapnote-api/edge.webapp/core/service"
 )

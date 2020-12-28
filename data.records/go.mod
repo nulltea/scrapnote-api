@@ -10,5 +10,6 @@ require (
 	go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9
 	go.mongodb.org/mongo-driver v1.4.4
 	google.golang.org/grpc v1.32.0
+	google.golang.org/protobuf v1.25.0
 	gopkg.in/yaml.v2 v2.4.0
 )

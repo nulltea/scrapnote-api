@@ -18,4 +18,5 @@ keys
 cert
 backup/mongo/
 
-**/env/config.yaml
+**/config/config.yaml
+**/config/config.dev.yaml

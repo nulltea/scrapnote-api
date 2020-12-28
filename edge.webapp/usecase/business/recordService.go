@@ -1,7 +1,11 @@
 package business
 
 import (
-	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/golang/glog"
+	"github.com/timoth-y/scrapnote-api/data.records/api/rpc/proto"
+	"github.com/timoth-y/scrapnote-api/data.records/core/model"
+	"google.golang.org/grpc"
+
 	"go.kicksware.com/api/service-common/api/events"
 	"go.kicksware.com/api/service-common/core"
 
@@ -11,12 +15,18 @@ import (
 
 type recordService struct {
 	events *events.Broker
+	remote *proto.RecordServiceClient
 	config config.ServiceConfig
 }
 
 func NewRecordService(config config.ServiceConfig, serializer core.Serializer) service.RecordService {
+	conn, err := grpc.Dial(serviceEndpoint, opts...); if err != nil {
+		glog.Fatalf("fail to dial: %v", err)
+	}
+
 	return &recordService {
 		events.NewEventsBroker(config.Events, "amq.topic", serializer),
+		proto.NewRecordServiceClient(),
 		config,
 	}
 }

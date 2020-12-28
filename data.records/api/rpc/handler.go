@@ -11,7 +11,7 @@ import (
 	"github.com/timoth-y/scrapnote-api/data.records/core/repo"
 )
 
-//go:generate protoc --proto_path=../../../protos --go_out=plugins=grpc,paths=source_relative:proto/. record.proto
+//go:generate protoc --proto_path=proto/ --go_out=plugins=grpc,paths=source_relative:proto/. record.proto
 
 type Handler struct {
 	repo repo.RecordRepository

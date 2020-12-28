@@ -1,7 +1,0 @@
-commonConfig:
-  host: localhost:8080
-eventsConfig:
-  URL: amqps://root:12345rabbitvswolf@amqp.kicksware.com:443
-  TLS:
-    enableTLS: true
-    certFile: /source/certs/rabbitmq/ca.crt
