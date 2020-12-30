@@ -29,7 +29,7 @@ func NativeToRecords(native []*model.Record) []*Record {
 	users := make([]*Record, 0)
 	for _, user := range native {
 		if user == nil {
-			continue;
+			continue
 		}
 		users = append(users, (&Record{}).FromNative(user))
 	}

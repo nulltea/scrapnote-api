@@ -5,25 +5,25 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/timoth-y/scrapnote-api/data.records/core/model"
-	"github.com/timoth-y/scrapnote-api/data.records/core/service"
+	"github.com/timoth-y/scrapnote-api/data.users/core/model"
+	"github.com/timoth-y/scrapnote-api/data.users/core/service"
 )
 
 type serializer struct{}
 
-func NewSerializer() service.RecordSerializer {
+func NewSerializer() service.UserSerializer {
 	return &serializer{}
 }
 
-func (r *serializer) Decode(input []byte) (record *model.Record, err error) {
-	if err = json.Unmarshal(input, &record); err != nil {
+func (r *serializer) Decode(input []byte) (user *model.User, err error) {
+	if err = json.Unmarshal(input, &user); err != nil {
 		return nil, errors.Wrap(err, "serializer.json.Decode")
 	}
 	return
 }
 
-func (r *serializer) DecodeRange(input []byte) (records []*model.Record, err error) {
-	if err = json.Unmarshal(input, &records); err != nil {
+func (r *serializer) DecodeRange(input []byte) (users []*model.User, err error) {
+	if err = json.Unmarshal(input, &users); err != nil {
 		return nil, errors.Wrap(err, "serializer.json.DecodeRange")
 	}
 	return

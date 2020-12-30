@@ -4,6 +4,7 @@ import (
 	"go.kicksware.com/api/service-common/container"
 	"go.kicksware.com/api/service-common/core"
 
+	"github.com/timoth-y/scrapnote-api/edge.webapp/api"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/config"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/container/factory"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/usecase/business"
@@ -15,8 +16,7 @@ func ConfigureContainer(container container.ServiceContainer, config config.Serv
 		BindSingleton(func() core.Serializer { return json.NewSerializer()}).
 		BindSingleton(business.NewRecordService).
 
-		BindSingleton(factory.ProvideEdgeHandler).
-		BindSingleton(factory.ProvideEndpointRouter).
+		BindSingleton(api.NewHandler).
 
 		BindTransient(factory.ProvideServer)
 }

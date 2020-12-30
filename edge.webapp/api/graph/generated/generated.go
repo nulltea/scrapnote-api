@@ -12,6 +12,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
+	model1 "github.com/timoth-y/scrapnote-api/data.records/core/model"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/core/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -37,6 +38,7 @@ type Config struct {
 type ResolverRoot interface {
 	Mutation() MutationResolver
 	Query() QueryResolver
+	Record() RecordResolver
 }
 
 type DirectiveRoot struct {
@@ -48,22 +50,26 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Records func(childComplexity int) int
+		Records func(childComplexity int, topic string) int
 	}
 
 	Record struct {
 		Content   func(childComplexity int) int
 		MarkerURL func(childComplexity int) int
 		SourceURL func(childComplexity int) int
+		TopicID   func(childComplexity int) int
 		UniqueID  func(childComplexity int) int
 	}
 }
 
 type MutationResolver interface {
-	ModifyRecord(ctx context.Context, input model.RecordInput) (*model.Record, error)
+	ModifyRecord(ctx context.Context, input model.RecordInput) (*model1.Record, error)
 }
 type QueryResolver interface {
-	Records(ctx context.Context) ([]*model.Record, error)
+	Records(ctx context.Context, topic string) ([]*model1.Record, error)
+}
+type RecordResolver interface {
+	TopicID(ctx context.Context, obj *model1.Record) (string, error)
 }
 
 type executableSchema struct {
@@ -98,7 +104,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.Records(childComplexity), true
+		args, err := ec.field_Query_records_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Records(childComplexity, args["topic"].(string)), true
 
 	case "Record.content":
 		if e.complexity.Record.Content == nil {
@@ -120,6 +131,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Record.SourceURL(childComplexity), true
+
+	case "Record.topicID":
+		if e.complexity.Record.TopicID == nil {
+			break
+		}
+
+		return e.complexity.Record.TopicID(childComplexity), true
 
 	case "Record.uniqueID":
 		if e.complexity.Record.UniqueID == nil {
@@ -194,13 +212,14 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Record {
   uniqueID: ID!
+  topicID: ID!
   content: String!
   sourceURL: String!
   markerURL: String!
 }
 
 type Query {
-  records: [Record!]!
+  records(topic: ID!): [Record!]!
 }
 
 input RecordInput {
@@ -245,6 +264,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_records_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 string
+	if tmp, ok := rawArgs["topic"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("topic"))
+		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["topic"] = arg0
 	return args, nil
 }
 
@@ -323,9 +357,9 @@ func (ec *executionContext) _Mutation_modifyRecord(ctx context.Context, field gr
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.Record)
+	res := resTmp.(*model1.Record)
 	fc.Result = res
-	return ec.marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecord(ctx, field.Selections, res)
+	return ec.marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecord(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_records(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -344,9 +378,16 @@ func (ec *executionContext) _Query_records(ctx context.Context, field graphql.Co
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_records_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Records(rctx)
+		return ec.resolvers.Query().Records(rctx, args["topic"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -358,9 +399,9 @@ func (ec *executionContext) _Query_records(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Record)
+	res := resTmp.([]*model1.Record)
 	fc.Result = res
-	return ec.marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecordᚄ(ctx, field.Selections, res)
+	return ec.marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecordᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -434,7 +475,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Record_uniqueID(ctx context.Context, field graphql.CollectedField, obj *model.Record) (ret graphql.Marshaler) {
+func (ec *executionContext) _Record_uniqueID(ctx context.Context, field graphql.CollectedField, obj *model1.Record) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -469,7 +510,42 @@ func (ec *executionContext) _Record_uniqueID(ctx context.Context, field graphql.
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Record_content(ctx context.Context, field graphql.CollectedField, obj *model.Record) (ret graphql.Marshaler) {
+func (ec *executionContext) _Record_topicID(ctx context.Context, field graphql.CollectedField, obj *model1.Record) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Record",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Record().TopicID(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Record_content(ctx context.Context, field graphql.CollectedField, obj *model1.Record) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -504,7 +580,7 @@ func (ec *executionContext) _Record_content(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Record_sourceURL(ctx context.Context, field graphql.CollectedField, obj *model.Record) (ret graphql.Marshaler) {
+func (ec *executionContext) _Record_sourceURL(ctx context.Context, field graphql.CollectedField, obj *model1.Record) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -539,7 +615,7 @@ func (ec *executionContext) _Record_sourceURL(ctx context.Context, field graphql
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Record_markerURL(ctx context.Context, field graphql.CollectedField, obj *model.Record) (ret graphql.Marshaler) {
+func (ec *executionContext) _Record_markerURL(ctx context.Context, field graphql.CollectedField, obj *model1.Record) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1774,7 +1850,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var recordImplementors = []string{"Record"}
 
-func (ec *executionContext) _Record(ctx context.Context, sel ast.SelectionSet, obj *model.Record) graphql.Marshaler {
+func (ec *executionContext) _Record(ctx context.Context, sel ast.SelectionSet, obj *model1.Record) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, recordImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -1786,22 +1862,36 @@ func (ec *executionContext) _Record(ctx context.Context, sel ast.SelectionSet, o
 		case "uniqueID":
 			out.Values[i] = ec._Record_uniqueID(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
+		case "topicID":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Record_topicID(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "content":
 			out.Values[i] = ec._Record_content(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "sourceURL":
 			out.Values[i] = ec._Record_sourceURL(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "markerURL":
 			out.Values[i] = ec._Record_markerURL(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -2089,11 +2179,11 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 	return res
 }
 
-func (ec *executionContext) marshalNRecord2githubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecord(ctx context.Context, sel ast.SelectionSet, v model.Record) graphql.Marshaler {
+func (ec *executionContext) marshalNRecord2githubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecord(ctx context.Context, sel ast.SelectionSet, v model1.Record) graphql.Marshaler {
 	return ec._Record(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecordᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Record) graphql.Marshaler {
+func (ec *executionContext) marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecordᚄ(ctx context.Context, sel ast.SelectionSet, v []*model1.Record) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2117,7 +2207,7 @@ func (ec *executionContext) marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscr
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecord(ctx, sel, v[i])
+			ret[i] = ec.marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecord(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2130,7 +2220,7 @@ func (ec *executionContext) marshalNRecord2ᚕᚖgithubᚗcomᚋtimothᚑyᚋscr
 	return ret
 }
 
-func (ec *executionContext) marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋedgeᚗwebappᚋcoreᚋmodelᚐRecord(ctx context.Context, sel ast.SelectionSet, v *model.Record) graphql.Marshaler {
+func (ec *executionContext) marshalNRecord2ᚖgithubᚗcomᚋtimothᚑyᚋscrapnoteᚑapiᚋdataᚗrecordsᚋcoreᚋmodelᚐRecord(ctx context.Context, sel ast.SelectionSet, v *model1.Record) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")

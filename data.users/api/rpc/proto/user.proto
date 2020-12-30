@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/timoth-y/scrapnote-api/data.users/api/rpc/proto";
+
+message User {
+  string uniqueID = 1;
+  string username = 2;
+  string email = 3;
+  string passwordHash = 4;
+  string firstName = 5;
+  string lastName = 6;
+  string phoneNumber = 7;
+  string avatar = 8;
+  bool confirmed = 9;
+  string role = 10;
+  google.protobuf.Timestamp registerDate = 11;
+}
+
+service UserService {
+  rpc Get(UserFilter) returns (UserResponse) {}
+  rpc Count(UserFilter) returns (UserResponse) {}
+}
+
+message UserFilter {
+  repeated string userID = 1;
+}
+
+message UserResponse {
+  repeated User users = 1;
+  int64 count = 2;
+}

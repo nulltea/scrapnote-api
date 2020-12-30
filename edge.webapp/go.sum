@@ -87,6 +87,8 @@ github.com/fsnotify/fsnotify v1.4.7/go.mod h1:jwhsz4b93w/PPRr/qN1Yymfu8t87LnFCMo
 github.com/go-chi/chi v3.3.2+incompatible/go.mod h1:eB3wogJHnLi3x/kFX2A+IbTBlXxmMeXJVKy9tTv1XzQ=
 github.com/go-chi/chi v4.1.2+incompatible h1:fGFk2Gmi/YKXk0OmGfBh0WgmN3XB8lVnEyNz34tQRec=
 github.com/go-chi/chi v4.1.2+incompatible/go.mod h1:eB3wogJHnLi3x/kFX2A+IbTBlXxmMeXJVKy9tTv1XzQ=
+github.com/go-chi/cors v1.1.1 h1:eHuqxsIw89iXcWnWUN8R72JMibABJTN/4IOYI5WERvw=
+github.com/go-chi/cors v1.1.1/go.mod h1:K2Yje0VW/SJzxiyMYu6iPQYa7hMjQX2i/F491VChg1I=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
@@ -370,12 +372,6 @@ github.com/timoth-y/kicksware-api/service-common v0.0.0-20200917003707-614a88b9c
 github.com/timoth-y/kicksware-api/service-common v0.0.0-20200917005139-98b85de071c8/go.mod h1:9SnVqlhMyDs3PLKLQOhDQmXUeZ/ErA8RKwYPaOZKFbQ=
 github.com/timoth-y/kicksware-api/user-service v0.0.0-20200917004439-e230029ec58b/go.mod h1:08/xwSHV+E4rUaUBBt9mIiQ5ae1M1OQS+zWmGxy6Ewc=
 github.com/timoth-y/kicksware-api/user-service v0.0.0-20200917011049-79140f0e7480/go.mod h1:pxzC5k7IyMano4tmao5kV64iF6HTKRBtDVZtN1soA9I=
-github.com/timoth-y/scrapnote-api v0.0.0-20201223172901-bd5fb8b65322 h1:f0enYd86mziYCsJGnywwP3sdPDLquf1I+WjOgZ3V2Mk=
-github.com/timoth-y/scrapnote-api v0.0.0-20201223172901-bd5fb8b65322/go.mod h1:ToBP4pzj135K+/62kacIbVtBaAobEQDjYlyKQZ7WVtA=
-github.com/timoth-y/scrapnote-api v0.0.0-20201223181105-3bf9f145e9e1 h1:XHRlY5ZKQAFN/+h+PrXUoUjVrtHTNGLUJOdvR3u86Co=
-github.com/timoth-y/scrapnote-api v0.0.0-20201227143107-79f53e8988d1 h1:zWQ5gC2ZN3D0GmyZ18H2PLDW2F8+mCOWoqPc8A6gRmg=
-github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201223181105-3bf9f145e9e1 h1:cPFppAyCP4s2hgXukzTdv//1zbNEjKu3bn+qvd+7+bA=
-github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201223181105-3bf9f145e9e1/go.mod h1:yaobPfTDL/++8ohp+6mRzF66T4DcIjfra08kHC2FL3U=
 github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201227143107-79f53e8988d1 h1:4a6hhlBJcK56DKErEsoOXaBalWfYFkMfShlw5iRiMRY=
 github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201227143107-79f53e8988d1/go.mod h1:z5U53hfrFVH4VzRTk85NtjhJQ9O8IvkYETvxRBk+J4g=
 github.com/urfave/cli/v2 v2.1.1 h1:Qt8FeAtxE/vfdrLmR3rxR6JRE0RoVmbXu8+6kZtYU4k=
@@ -691,9 +687,6 @@ google.golang.org/grpc v1.30.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM
 google.golang.org/grpc v1.31.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM8pak=
 google.golang.org/grpc v1.32.0 h1:zWTV+LMdc3kaiJMSTOFz2UgSBgx8RNQoTGiZu3fR9S0=
 google.golang.org/grpc v1.32.0/go.mod h1:N36X2cJ7JwdamYAgDz+s+rVMFjt3numwzf/HckM8pak=
-google.golang.org/grpc v1.34.0 h1:raiipEjMOIC/TO2AvyTxP25XFdLxNIBwzDh3FM3XztI=
-google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.1 h1:M8spwkmx0pHrPq+uMdl22w5CvJ/Y+oAJTIs9oGoCpOE=
-google.golang.org/grpc/cmd/protoc-gen-go-grpc v1.0.1/go.mod h1:6Kw0yEErY5E/yWrBtf03jp27GLLJujG4z/JK95pnjjw=
 google.golang.org/grpc/examples v0.0.0-20200916215349-9ec6f11015bc h1:9H95Mq/wDTqToBw1yeIZubQ4QgMX5rtatV/gczXsK84=
 google.golang.org/grpc/examples v0.0.0-20200916215349-9ec6f11015bc/go.mod h1:Lh55/1hxmVHEkOvSIQ2uj0P12QyOCUNyRwnUlSS13hw=
 google.golang.org/protobuf v0.0.0-20200109180630-ec00e32a8dfd/go.mod h1:DFci5gLYBciE7Vtevhsrf46CRTquxDuWsQurQQe4oz8=

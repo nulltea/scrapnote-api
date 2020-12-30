@@ -7,15 +7,21 @@ import (
 	"context"
 	"fmt"
 
+	native "github.com/timoth-y/scrapnote-api/data.records/core/model"
+
 	"github.com/timoth-y/scrapnote-api/edge.webapp/api/graph/generated"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/core/model"
 )
 
-func (r *mutationResolver) ModifyRecord(ctx context.Context, input model.RecordInput) (*model.Record, error) {
+func (r *mutationResolver) ModifyRecord(ctx context.Context, input model.RecordInput) (*native.Record, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
-func (r *queryResolver) Records(ctx context.Context) ([]*model.Record, error) {
+func (r *queryResolver) Records(ctx context.Context, topic string) ([]*native.Record, error) {
+	return r.records.GetFrom(topic)
+}
+
+func (r *recordResolver) TopicID(ctx context.Context, obj *native.Record) (string, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
@@ -25,5 +31,9 @@ func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResol
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Record returns generated.RecordResolver implementation.
+func (r *Resolver) Record() generated.RecordResolver { return &recordResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type recordResolver struct{ *Resolver }

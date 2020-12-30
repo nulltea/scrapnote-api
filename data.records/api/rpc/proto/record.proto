@@ -4,7 +4,7 @@ package proto;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/timoth-y/scrapnote-api/record/api/proto";
+option go_package = "github.com/timoth-y/scrapnote-api/data.records/api/rpc/proto";
 
 message Record {
   string uniqueID = 1;

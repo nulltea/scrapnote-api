@@ -2,13 +2,6 @@
 
 package model
 
-type Record struct {
-	UniqueID  string `json:"uniqueID"`
-	Content   string `json:"content"`
-	SourceURL string `json:"sourceURL"`
-	MarkerURL string `json:"markerURL"`
-}
-
 type RecordInput struct {
 	UniqueID string `json:"uniqueID"`
 	Content  string `json:"content"`

@@ -8,8 +8,8 @@ import (
 	"github.com/timoth-y/scrapnote-api/edge.webapp/config"
 )
 
-func ProvideServer(config config.ServiceConfig, router chi.Router) core.Server {
+func ProvideServer(config config.ServiceConfig, handler chi.Router) core.Server {
 	srv := server.NewInstance(config.Common.Host)
-	srv.SetupREST(router)
+	srv.SetupREST(handler)
 	return srv
 }

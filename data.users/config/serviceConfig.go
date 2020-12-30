@@ -10,9 +10,10 @@ import (
 )
 
 type ServiceConfig struct {
-	Common config.CommonConfig     `yaml:"commonConfig"`
-	Events config.ConnectionConfig `yaml:"eventsConfig"`
-	RPC    config.ConnectionConfig `yaml:"rpcConfig"`
+	Common    config.CommonConfig     `yaml:"commonConfig"`
+	Events    config.ConnectionConfig `yaml:"eventsConfig"`
+	Cockroach config.DataStoreConfig  `yaml:"cockroachConfig"`
+	Mongo     config.DataStoreConfig  `yaml:"mongoConfig"`
 }
 
 func ReadServiceConfig(filename string) (sc ServiceConfig, err error) {

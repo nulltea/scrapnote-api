@@ -1,4 +1,4 @@
-module github.com/timoth-y/scrapnote-api/data.records
+module github.com/timoth-y/scrapnote-api/data.users
 
 go 1.15
 

@@ -17,8 +17,8 @@ import (
 	"github.com/golang/glog"
 	"go.kicksware.com/api/service-common/core/meta"
 
-	"github.com/timoth-y/scrapnote-api/data.records/core/model"
-	"github.com/timoth-y/scrapnote-api/data.records/core/repo"
+	"github.com/timoth-y/scrapnote-api/data.users/core/model"
+	"github.com/timoth-y/scrapnote-api/data.users/core/repo"
 )
 
 type repository struct {
@@ -29,7 +29,7 @@ type repository struct {
 }
 
 
-func NewRepository(config config.DataStoreConfig) (repo.RecordRepository, error) {
+func NewRepository(config config.DataStoreConfig) (repo.UserRepository, error) {
 	repo := &repository{
 		timeout:  time.Duration(config.Timeout) * time.Second,
 	}
@@ -73,63 +73,40 @@ func newTLSConfig(tlsConfig *meta.TLSCertificate) *tls.Config {
 	}
 }
 
-func (r repository) Retrieve(ids []string) ([]*model.Record, error) {
+func (r repository) Retrieve(ids []string) ([]*model.User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
 
 	query := r.buildQueryPipeline(bson.M{ "unique_id": bson.M{ "$in": ids } })
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
-		return nil, errors.Wrap(err, "repository.Record.Retrieve")
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
 	}
 	defer cursor.Close(ctx)
 
-	var orders []*model.Record
-	if err = cursor.All(ctx, &orders); err != nil {
-		return nil, errors.Wrap(err, "repository.Record.Retrieve")
+	var users []*model.User
+	if err = cursor.All(ctx, &users); err != nil {
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
 	}
-	if orders == nil || len(orders) == 0 {
+	if users == nil || len(users) == 0 {
 		if err == mongo.ErrNoDocuments{
-			return nil, errors.Wrap(err, "repository.Record.Retrieve")
+			return nil, errors.Wrap(err, "repository.User.Retrieve")
 		}
-		return nil, errors.Wrap(err, "repository.Record.Retrieve")
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
 	}
-	return orders, nil
+	return users, nil
 }
 
-func (r repository) RetrieveBy(topic string) ([]*model.Record, error) {
+func (r *repository) Store(user *model.User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
 	defer cancel()
-
-	query := r.buildQueryPipeline(bson.M{"topic_id": topic})
-	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
-		return nil, errors.Wrap(err, "repository.Record.FetchOne")
-	}
-	defer cursor.Close(ctx)
-
-	var orders []*model.Record
-	if err = cursor.All(ctx, &orders); err != nil {
-		return nil, errors.Wrap(err, "repository.Record.FetchOne")
-	}
-	if orders == nil || len(orders) == 0 {
-		if err == mongo.ErrNoDocuments{
-			return nil, errors.Wrap(err, "repository.Record.FetchOne")
-		}
-		return nil, errors.Wrap(err, "repository.Record.FetchOne")
-	}
-	return orders, nil
-}
-
-func (r *repository) Store(record *model.Record) error {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
-	defer cancel()
-	_, err := r.collection.InsertOne(ctx, record)
+	_, err := r.collection.InsertOne(ctx, user)
 	if err != nil {
-		return errors.Wrap(err, "repository.Record.Store")
+		return errors.Wrap(err, "repository.User.Store")
 	}
 	return nil
 }
 
-func (r *repository) Modify(record *model.Record) error {
+func (r *repository) Modify(user *model.User) error {
 	panic("implement me")
 }
 

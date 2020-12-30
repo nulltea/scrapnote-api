@@ -11,19 +11,19 @@ import (
 
 	"github.com/timoth-y/scrapnote-api/data.records/config"
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
-	"github.com/timoth-y/scrapnote-api/data.records/core/service"
+	"github.com/timoth-y/scrapnote-api/data.records/core/repo"
 )
 
 type handler struct {
 	broker *events.Broker
-	repo   service.RecordService
+	repo   repo.RecordRepository
 	errors chan error
 }
 
-func NewHandler(service service.RecordService, serializer core.Serializer, config config.ServiceConfig) core.Handler {
+func NewHandler(repo repo.RecordRepository, serializer core.Serializer, config config.ServiceConfig) core.Handler {
 	return &handler{
 		broker: events.NewEventsBroker(config.Events, "amq.topic", serializer),
-		repo:   service,
+		repo:   repo,
 		errors: make(chan error),
 	}
 }
@@ -32,10 +32,10 @@ func (h *handler) Setup() {
 	if err := h.broker.Consume("records.add", "records.add", h.addHandler, 1); err != nil {
 		glog.Fatalln(err)
 	}
-	if err := h.broker.Consume("rating.update", "rating.update", h.updateHandler, 1); err != nil {
+	if err := h.broker.Consume("records.update", "records.update", h.updateHandler, 1); err != nil {
 		glog.Fatalln(err)
 	}
-	if err := h.broker.Consume("rating.delete", "rating.delete", h.deleteHandler, 1); err != nil {
+	if err := h.broker.Consume("records.delete", "records.delete", h.deleteHandler, 1); err != nil {
 		glog.Fatalln(err)
 	}
 }
@@ -50,7 +50,7 @@ func (h *handler) addHandler(msg amqp.Delivery) bool {
 	record, ok := getRecord(msg.Body); if !ok {
 		return false
 	}
-	if err := h.repo.Add(record); err != nil {
+	if err := h.repo.Store(record); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -62,7 +62,7 @@ func (h *handler) updateHandler(msg amqp.Delivery) bool {
 	record, ok := getRecord(msg.Body); if !ok {
 		return false
 	}
-	if err := h.repo.Update(record); err != nil {
+	if err := h.repo.Modify(record); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -74,7 +74,7 @@ func (h *handler) deleteHandler(msg amqp.Delivery) bool {
 	record, ok := getRecord(msg.Body); if !ok {
 		return false
 	}
-	if err := h.repo.Update(record); err != nil {
+	if err := h.repo.Remove(record.UniqueID); err != nil {
 		h.errors <- err
 		return false
 	}

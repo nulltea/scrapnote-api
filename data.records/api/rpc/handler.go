@@ -24,10 +24,10 @@ func ProvideRemoteSetup(handler *Handler) func(server *grpc.Server) {
 	}
 }
 
-func NewHandler(repo repo.RecordRepository, auth core.AuthService) *Handler {
+func NewHandler(repo repo.RecordRepository) *Handler {
 	return &Handler{
 		repo,
-		auth,
+		nil,
 	}
 }
 
