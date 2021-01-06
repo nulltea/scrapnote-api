@@ -14,9 +14,9 @@ import (
 	"github.com/rs/xid"
 	"github.com/timoth-y/scrapnote-api/data.users/api/rpc/proto"
 	"github.com/timoth-y/scrapnote-api/data.users/core/model"
-	"go.kicksware.com/api/service-common/api/events"
-	"go.kicksware.com/api/service-common/api/gRPC"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/events"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/gRPC"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/serv.auth/config"
 	"github.com/timoth-y/scrapnote-api/serv.auth/core/errors"

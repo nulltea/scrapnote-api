@@ -1,8 +1,8 @@
 package config
 
 import (
-	"go.kicksware.com/api/service-common/container"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/container"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/data.users/api/async"
 	"github.com/timoth-y/scrapnote-api/data.users/api/rpc"

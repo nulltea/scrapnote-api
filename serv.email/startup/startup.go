@@ -3,8 +3,8 @@ package startup
 import (
 	"os"
 
-	di "go.kicksware.com/api/service-common/container"
-	"go.kicksware.com/api/service-common/core"
+	di "github.com/timoth-y/scrapnote-api/lib.common/container"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/serv.email/config"
 	cnf "github.com/timoth-y/scrapnote-api/serv.email/container/config"

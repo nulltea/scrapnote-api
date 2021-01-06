@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/golang/glog"
-	"go.kicksware.com/api/service-common/api/events"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/events"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/data.users/config"
 	"github.com/timoth-y/scrapnote-api/data.users/core/model"

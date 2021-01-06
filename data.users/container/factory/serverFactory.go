@@ -1,8 +1,8 @@
 package factory
 
 import (
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/server"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/server"
 
 	"github.com/timoth-y/scrapnote-api/data.users/api/rpc"
 	"github.com/timoth-y/scrapnote-api/data.users/config"

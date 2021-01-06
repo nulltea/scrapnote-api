@@ -2,7 +2,7 @@ package factory
 
 import (
 	"github.com/go-chi/chi"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/edge.plugin/api"
 	"github.com/timoth-y/scrapnote-api/edge.plugin/config"

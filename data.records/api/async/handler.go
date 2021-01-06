@@ -6,11 +6,11 @@ import (
 
 	"github.com/golang/glog"
 	"github.com/rs/xid"
-	"go.kicksware.com/api/service-common/api/events"
-	"go.kicksware.com/api/service-common/api/rest"
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/core/errors"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/events"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/rest"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/errors"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 
 	"github.com/timoth-y/scrapnote-api/data.records/config"
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"

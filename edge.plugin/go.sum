@@ -366,6 +366,8 @@ github.com/timoth-y/kicksware-api/user-service v0.0.0-20200917004439-e230029ec58
 github.com/timoth-y/kicksware-api/user-service v0.0.0-20200917011049-79140f0e7480/go.mod h1:pxzC5k7IyMano4tmao5kV64iF6HTKRBtDVZtN1soA9I=
 github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201230132515-8ad9f972304f h1:2pexoBZZkOod3vPaH5Kkl26HWphp/NI1J36DrEf1NGo=
 github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201230132515-8ad9f972304f/go.mod h1:z5sQRCRA4sMRN+512LYGSEmji5FxkF56328hz+Zv3Bo=
+github.com/timoth-y/scrapnote-api/lib.common v0.0.0-20210106161940-5641ff34b78b h1:EghppjarnK1fOdKQ9yE3W0fX7dKe03xolSuQdMCYsO4=
+github.com/timoth-y/scrapnote-api/lib.common v0.0.0-20210106161940-5641ff34b78b/go.mod h1:H/O/Lg0QINcWlZdx9iGC8l8aeLgBw0X9XLrsO2itfwE=
 github.com/urfave/cli/v2 v2.1.1/go.mod h1:SE9GqnLQmjVa0iPEY0f1w3ygNIYcIJ0OKPMoW2caLfQ=
 github.com/vektah/dataloaden v0.2.1-0.20190515034641-a19b9a6e7c9e/go.mod h1:/HUdMve7rvxZma+2ZELQeNh88+003LL7Pf/CZ089j8U=
 github.com/vektah/gqlparser/v2 v2.1.0 h1:uiKJ+T5HMGGQM2kRKQ8Pxw8+Zq9qhhZhz/lieYvCMns=
@@ -392,8 +394,6 @@ go.kicksware.com/api/service-common v0.0.0-20201002034117-505bfe555177/go.mod h1
 go.kicksware.com/api/service-common v0.0.0-20201003150158-9a7ca75dcdd6/go.mod h1:u9jKz+UkcCXTJHJbgHx0QkbUhjQBNKdpqHUO0Gc4N/M=
 go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9 h1:utYaEkxTyCqVjvcY1BRqFTdBvSj4suJvmEawgfMDvWo=
 go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9/go.mod h1:FTxSpUG8qxHb//Evw4VEdkRxdyfwc99yfD4VmsJsNK0=
-go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76 h1:Wcslz+Cjbqijm0Noo82dO2QTM+a5o3mYVDISf0sIS8c=
-go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76/go.mod h1:FTxSpUG8qxHb//Evw4VEdkRxdyfwc99yfD4VmsJsNK0=
 go.kicksware.com/api/user-service v0.0.0-20201002035145-842d131c8dc2/go.mod h1:UWaGS0jC62q53CQuqiokVob7O01eHtliR/HkQKb8eFs=
 go.kicksware.com/api/user-service v0.0.0-20201008011940-2e4b60fb4b00 h1:GLZtzkP7o+igH9+U2vwkz3dWpdC/nvxfcvzK73toVXc=
 go.kicksware.com/api/user-service v0.0.0-20201008011940-2e4b60fb4b00/go.mod h1:gVNtfSrXO2S9ngaBIi9ugjbPTeN5cQ56Si3kRGvMY3s=

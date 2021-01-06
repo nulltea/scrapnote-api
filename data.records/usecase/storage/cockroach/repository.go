@@ -7,8 +7,8 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
-	"go.kicksware.com/api/service-common/config"
-	"go.kicksware.com/api/service-common/util"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
+	"github.com/timoth-y/scrapnote-api/lib.common/util"
 
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
 	"github.com/timoth-y/scrapnote-api/data.records/core/repo"

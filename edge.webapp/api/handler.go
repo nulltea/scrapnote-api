@@ -4,8 +4,8 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
-	"go.kicksware.com/api/service-common/api/rest"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/rest"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/edge.webapp/api/graph"
 	"github.com/timoth-y/scrapnote-api/edge.webapp/api/graph/generated"

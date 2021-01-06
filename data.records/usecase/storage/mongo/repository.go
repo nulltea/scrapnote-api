@@ -8,16 +8,16 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"go.kicksware.com/api/service-common/api/rest"
-	"go.kicksware.com/api/service-common/config"
-	commonErrors "go.kicksware.com/api/service-common/core/errors"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/rest"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
+	commonErrors "github.com/timoth-y/scrapnote-api/lib.common/core/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 
 	"github.com/golang/glog"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 
 	"github.com/timoth-y/scrapnote-api/data.records/api/rpc/proto"
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"

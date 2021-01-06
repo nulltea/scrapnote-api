@@ -9,6 +9,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rs/xid v1.2.1
 	github.com/timoth-y/scrapnote-api/data.users v0.0.0-20201230110128-f21c5277c246
-	go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76
+	github.com/timoth-y/scrapnote-api/lib.common v0.0.0-20210106161940-5641ff34b78b
 	gopkg.in/yaml.v2 v2.4.0
 )

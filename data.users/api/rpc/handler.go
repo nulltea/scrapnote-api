@@ -3,7 +3,7 @@ package rpc
 import (
 	"context"
 
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 	"google.golang.org/grpc"
 
 	"github.com/timoth-y/scrapnote-api/data.users/api/rpc/proto"

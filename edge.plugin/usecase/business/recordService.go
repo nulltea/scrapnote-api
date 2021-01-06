@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
-	"go.kicksware.com/api/service-common/api/events"
-	"go.kicksware.com/api/service-common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/events"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
 
 	"github.com/timoth-y/scrapnote-api/edge.plugin/config"
 	"github.com/timoth-y/scrapnote-api/edge.plugin/core/service"

@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"go.kicksware.com/api/service-common/api/rest"
-	"go.kicksware.com/api/service-common/config"
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/rest"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
 
