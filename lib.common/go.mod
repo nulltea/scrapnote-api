@@ -1,4 +1,4 @@
-module go.kicksware.com/api/service-common
+module github.com/timoth-y/scrapnote-api/lib.common
 
 go 1.14
 

@@ -12,8 +12,8 @@ import (
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/golang/glog"
 
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 var (

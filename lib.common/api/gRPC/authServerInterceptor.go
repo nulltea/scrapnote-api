@@ -11,7 +11,7 @@ import (
 
 	"go.kicksware.com/api/user-service/core/meta"
 
-	"go.kicksware.com/api/service-common/api/jwt"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/jwt"
 )
 
 const (

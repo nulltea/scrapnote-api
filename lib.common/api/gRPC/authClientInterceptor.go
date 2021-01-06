@@ -10,8 +10,8 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 
-	"go.kicksware.com/api/service-common/core"
-	tlsMeta "go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	tlsMeta "github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 type AuthClientInterceptor struct {

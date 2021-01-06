@@ -3,7 +3,7 @@ package gRPC
 import (
 	"google.golang.org/grpc/credentials"
 
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 func LoadServerTLSCredentials(cert *meta.TLSCertificate) (credentials.TransportCredentials, error) {

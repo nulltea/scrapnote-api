@@ -4,7 +4,7 @@ import (
 	"github.com/golang/glog"
 	"google.golang.org/grpc"
 
-	"go.kicksware.com/api/service-common/config"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
 )
 
 func NewRemoteConnection(config config.ConnectionConfig) *grpc.ClientConn {

@@ -10,9 +10,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"go.kicksware.com/api/service-common/config"
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 type communicator struct {

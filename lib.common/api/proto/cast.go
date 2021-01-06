@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang/protobuf/ptypes/wrappers"
 
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 func (m *RequestParams) ToNative() *meta.RequestParams {

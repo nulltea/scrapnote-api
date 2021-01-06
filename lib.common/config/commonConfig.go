@@ -1,6 +1,6 @@
 package config
 
-import "go.kicksware.com/api/service-common/core/meta"
+import "github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 
 type CommonConfig struct {
 	Host              string           `yaml:"host"`

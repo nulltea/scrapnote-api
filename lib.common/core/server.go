@@ -7,7 +7,7 @@ import (
 	"github.com/go-chi/chi"
 	"google.golang.org/grpc"
 
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 type Server interface {

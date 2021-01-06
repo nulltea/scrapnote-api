@@ -3,9 +3,9 @@ package rest
 import (
 	"crypto/rsa"
 
-	"go.kicksware.com/api/service-common/config"
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/util"
+	"github.com/timoth-y/scrapnote-api/lib.common/config"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/util"
 )
 
 type authService struct {

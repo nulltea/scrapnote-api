@@ -22,10 +22,10 @@ import (
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/reflection"
 
-	"go.kicksware.com/api/service-common/api/gRPC"
-	"go.kicksware.com/api/service-common/api/jwt"
-	"go.kicksware.com/api/service-common/core"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/gRPC"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/jwt"
+	"github.com/timoth-y/scrapnote-api/lib.common/core"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/sirupsen/logrus"

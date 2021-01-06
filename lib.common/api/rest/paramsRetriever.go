@@ -9,7 +9,7 @@ import (
 
 	"github.com/fatih/structs"
 
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 func NewRequestParams(r *http.Request) *meta.RequestParams {

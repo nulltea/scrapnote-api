@@ -17,8 +17,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"google.golang.org/grpc/metadata"
 
-	"go.kicksware.com/api/service-common/api/gRPC"
-	"go.kicksware.com/api/service-common/core/meta"
+	"github.com/timoth-y/scrapnote-api/lib.common/api/gRPC"
+	"github.com/timoth-y/scrapnote-api/lib.common/core/meta"
 )
 
 func ToMap(v interface{}) map[string]interface{} {
