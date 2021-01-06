@@ -28,7 +28,6 @@ type repository struct {
 	timeout    time.Duration
 }
 
-
 func NewRepository(config config.DataStoreConfig) (repo.RecordRepository, error) {
 	repo := &repository{
 		timeout:  time.Duration(config.Timeout) * time.Second,
@@ -101,6 +100,29 @@ func (r repository) RetrieveBy(topic string) ([]*model.Record, error) {
 	defer cancel()
 
 	query := r.buildQueryPipeline(bson.M{"topic_id": topic})
+	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
+		return nil, errors.Wrap(err, "repository.Record.FetchOne")
+	}
+	defer cursor.Close(ctx)
+
+	var orders []*model.Record
+	if err = cursor.All(ctx, &orders); err != nil {
+		return nil, errors.Wrap(err, "repository.Record.FetchOne")
+	}
+	if orders == nil || len(orders) == 0 {
+		if err == mongo.ErrNoDocuments{
+			return nil, errors.Wrap(err, "repository.Record.FetchOne")
+		}
+		return nil, errors.Wrap(err, "repository.Record.FetchOne")
+	}
+	return orders, nil
+}
+
+func (r repository) RetrieveAll() ([]*model.Record, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+	defer cancel()
+
+	query := r.buildQueryPipeline(bson.M{})
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
 		return nil, errors.Wrap(err, "repository.Record.FetchOne")
 	}

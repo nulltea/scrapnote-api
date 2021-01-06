@@ -2,25 +2,15 @@ package business
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
-	"fmt"
-	"math/rand"
-	"net/url"
-	"strconv"
-	"strings"
-	"time"
 
-	"github.com/rs/xid"
 	"github.com/timoth-y/scrapnote-api/data.users/api/rpc/proto"
 	"github.com/timoth-y/scrapnote-api/data.users/core/model"
 	"go.kicksware.com/api/service-common/api/events"
 	"go.kicksware.com/api/service-common/api/gRPC"
 	"go.kicksware.com/api/service-common/core"
 
-	"github.com/timoth-y/scrapnote-api/serv.auth/config"
-	"github.com/timoth-y/scrapnote-api/serv.auth/core/errors"
-	"github.com/timoth-y/scrapnote-api/serv.auth/core/service"
+	"github.com/timoth-y/scrapnote-api/serv.email/config"
+	"github.com/timoth-y/scrapnote-api/serv.email/core/service"
 )
 
 type userService struct {
@@ -78,13 +68,6 @@ func (s *userService) FetchByUsername(username string) (*model.User, error) {
 }
 
 func (s *userService) Create(user *model.User) error {
-	user.RegisterDate = time.Now()
-	if len(user.UniqueID) < 8 {
-		user.UniqueID = xid.NewWithTime(user.RegisterDate).String()
-	}
-	if len(user.Username) == 0 {
-		s.GenerateUsername(user, false)
-	}
 	return s.events.Emmit("users.add", user)
 }
 
@@ -94,65 +77,4 @@ func (s *userService) Modify(user *model.User) error {
 
 func (s *userService) Delete(user *model.User) error {
 	return s.events.Emmit("users.delete", user)
-}
-
-func (s *userService) Verify(user *model.User) error {
-	token := generateToken(user.UniqueID)
-	requestParams := &struct {
-		Email       string
-		CallbackURL string
-	}{
-		Email: user.Email,
-		CallbackURL: fmt.Sprintf("/%v", url.PathEscape(token)),
-	}
-	return s.events.Emmit("email.verify", requestParams)
-}
-
-func (s *userService) Confirm(userID, token string) error {
-	user, err := s.FetchOne(userID); if err != nil {
-		return err
-	}
-
-	if !verifyToken(userID, token) {
-		return errors.ErrTokenInvalid
-	}
-
-	user.Confirmed = true
-	if err = s.Modify(user); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (s *userService) GenerateUsername(user *model.User, save bool) (string, error) {
-	if len(user.Email) == 0 {
-		return "", errors.ErrEmailInvalid
-	}
-	username := strings.Split(user.Email, "@")[0]
-	if another, _ := s.FetchByUsername(username); another != nil {
-		baseUsername := username
-		for another != nil {
-			rand.Seed(user.RegisterDate.Unix())
-			username = fmt.Sprintf("%v_%v", baseUsername, strconv.Itoa(rand.Int())[:3])
-			another, _ = s.FetchByUsername(username)
-		}
-	}
-	user.Username = username
-	if save {
-		if err := s.Modify(user); err != nil {
-			return "", err
-		}
-	}
-	return username, nil;
-}
-
-
-func generateToken(userID string) string {
-	h := md5.New()
-	h.Write([]byte(strings.ToLower(userID)))
-	return hex.EncodeToString(h.Sum(nil))
-}
-
-func verifyToken(userID, token string) bool {
-	return generateToken(userID) == token
 }

@@ -34,8 +34,8 @@ func NewHandler(repo repo.UserRepository) *Handler {
 func (h Handler) Get(ctx context.Context, filter *proto.UserFilter) (r *proto.UserResponse, err error) {
 	var users []*model.User
 
-	if len(filter.UserID) > 0 {
-		users, err = h.repo.Retrieve(filter.UserID)
+	users, err = h.repo.RetrieveBy(filter); if err != nil {
+		return nil, err
 	}
 
 	r = &proto.UserResponse{

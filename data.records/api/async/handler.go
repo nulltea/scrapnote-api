@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/golang/glog"
+	"github.com/rs/xid"
 	"github.com/streadway/amqp"
 	"go.kicksware.com/api/service-common/api/events"
 	"go.kicksware.com/api/service-common/core"
@@ -50,6 +51,7 @@ func (h *handler) addHandler(msg amqp.Delivery) bool {
 	record, ok := getRecord(msg.Body); if !ok {
 		return false
 	}
+	record.UniqueID = xid.New().String()
 	if err := h.repo.Store(record); err != nil {
 		h.errors <- err
 		return false

@@ -6,10 +6,12 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"go.kicksware.com/api/service-common/api/rest"
 	"go.kicksware.com/api/service-common/config"
+	"go.kicksware.com/api/service-common/core"
 	"go.kicksware.com/api/service-common/core/meta"
 
-	"github.com/timoth-y/scrapnote-api/records/core/model"
+	"github.com/timoth-y/scrapnote-api/data.records/core/model"
 
 	"github.com/timoth-y/scrapnote-api/edge.plugin/core/service"
 	"github.com/timoth-y/scrapnote-api/edge.plugin/usecase/serializer/json"
@@ -17,12 +19,14 @@ import (
 
 type Handler struct {
 	service     service.RecordService
+	auth        *rest.AuthMiddleware
 	contentType string
 }
 
-func NewHandler(service service.RecordService, config config.CommonConfig) *Handler {
+func NewHandler(service service.RecordService, auth core.AuthService, config config.CommonConfig) *Handler {
 	return &Handler{
 		service,
+		rest.NewAuthMiddleware(auth),
 		config.ContentType,
 	}
 }

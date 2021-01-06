@@ -5,10 +5,10 @@ import (
 	"go.kicksware.com/api/service-common/container"
 	"go.kicksware.com/api/service-common/core"
 
-	"github.com/timoth-y/scrapnote-api/serv.auth/api"
-	"github.com/timoth-y/scrapnote-api/serv.auth/config"
-	"github.com/timoth-y/scrapnote-api/serv.auth/container/factory"
-	"github.com/timoth-y/scrapnote-api/serv.auth/usecase/business"
+	"github.com/timoth-y/scrapnote-api/serv.email/api"
+	"github.com/timoth-y/scrapnote-api/serv.email/config"
+	"github.com/timoth-y/scrapnote-api/serv.email/container/factory"
+	"github.com/timoth-y/scrapnote-api/serv.email/usecase/business"
 )
 
 func ConfigureContainer(container container.ServiceContainer, config config.ServiceConfig) {
@@ -16,10 +16,9 @@ func ConfigureContainer(container container.ServiceContainer, config config.Serv
 		BindSingleton(func() core.Serializer { return json.NewSerializer()}).
 
 		BindSingleton(business.NewUserService).
-		BindSingleton(business.NewAuthServiceJWT).
+		BindSingleton(business.NewMailService).
 
 		BindSingleton(api.NewHandler).
-		BindSingleton(api.ProvideRoutes).
 
 		BindTransient(factory.ProvideServer)
 }

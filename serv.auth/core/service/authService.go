@@ -18,7 +18,7 @@ var (
 )
 
 type AuthService interface {
-	SingUp(user *model.User) (*meta.AuthToken, error)
+	SingUp(user *model.User) error
 	Login(user *model.User) (*meta.AuthToken, error)
 	Remote(user *model.User) (*meta.AuthToken, error)
 	GenerateToken(user *model.User) (*meta.AuthToken, error)

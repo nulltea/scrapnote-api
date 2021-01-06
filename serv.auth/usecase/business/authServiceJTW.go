@@ -27,21 +27,24 @@ type authService struct {
 	publicKey *rsa.PublicKey
 }
 
-func NewAuthServiceJWT(userService service.UserService, authConfig config.AuthConfig) service.AuthService {
+func NewAuthServiceJWT(userService service.UserService, config config.ServiceConfig) service.AuthService {
 	return &authService{
 		userService,
-		authConfig.IssuerName,
-		authConfig.TokenExpirationDelta,
-		getPrivateKey(authConfig.PrivateKeyPath),
-		getPublicKey(authConfig.PublicKeyPath),
+		config.Auth.IssuerName,
+		config.Auth.TokenExpirationDelta,
+		getPrivateKey(config.Auth.PrivateKeyPath),
+		getPublicKey(config.Auth.PublicKeyPath),
 	}
 }
 
-func (s *authService) SingUp(user *model.User) (*meta.AuthToken, error) {
+func (s *authService) SingUp(user *model.User) error {
 	if err := s.userService.Create(user); err != nil {
-		return nil, err
+		return err
 	}
-	return s.GenerateToken(user)
+	if err := s.userService.Verify(user); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *authService) Login(user *model.User) (*meta.AuthToken, error) {
@@ -79,8 +82,11 @@ func (s *authService) Remote(user *model.User) (*meta.AuthToken, error) {
 	// 		return s.GenerateToken(connected)
 	// 	}
 	// }
+	if err := s.SingUp(user); err != nil {
+		return nil, err
+	}
 
-	return s.SingUp(user)
+	return s.GenerateToken(user)
 }
 
 func (s *authService) GenerateToken(user *model.User) (*meta.AuthToken, error) {

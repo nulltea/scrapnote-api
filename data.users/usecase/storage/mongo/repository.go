@@ -17,6 +17,7 @@ import (
 	"github.com/golang/glog"
 	"go.kicksware.com/api/service-common/core/meta"
 
+	"github.com/timoth-y/scrapnote-api/data.users/api/rpc/proto"
 	"github.com/timoth-y/scrapnote-api/data.users/core/model"
 	"github.com/timoth-y/scrapnote-api/data.users/core/repo"
 )
@@ -27,7 +28,6 @@ type repository struct {
 	collection *mongo.Collection
 	timeout    time.Duration
 }
-
 
 func NewRepository(config config.DataStoreConfig) (repo.UserRepository, error) {
 	repo := &repository{
@@ -78,6 +78,40 @@ func (r repository) Retrieve(ids []string) ([]*model.User, error) {
 	defer cancel()
 
 	query := r.buildQueryPipeline(bson.M{ "unique_id": bson.M{ "$in": ids } })
+	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
+	}
+	defer cursor.Close(ctx)
+
+	var users []*model.User
+	if err = cursor.All(ctx, &users); err != nil {
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
+	}
+	if users == nil || len(users) == 0 {
+		if err == mongo.ErrNoDocuments{
+			return nil, errors.Wrap(err, "repository.User.Retrieve")
+		}
+		return nil, errors.Wrap(err, "repository.User.Retrieve")
+	}
+	return users, nil
+}
+
+func (r repository) RetrieveBy(filter *proto.UserFilter) ([]*model.User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+	defer cancel()
+
+	fields := bson.M{}
+	if filter.UserID != nil {
+		fields["unique_id"] = bson.M{ "$in": filter.UserID }
+	}
+	if filter.Email != nil {
+		fields["email"] = bson.M{ "$in": filter.Email }
+	}
+	if filter.Username != nil {
+		fields["username"] = bson.M{ "$in": filter.Email }
+	}
+	query := r.buildQueryPipeline(fields)
+
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
 		return nil, errors.Wrap(err, "repository.User.Retrieve")
 	}

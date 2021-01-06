@@ -5,7 +5,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
-func ProvideRoutes(rest *Handler) *chi.Mux {
+func ProvideRoutes(rest *Handler) chi.Router {
 	router := chi.NewRouter()
 	router.Use(
 		middleware.Logger,
@@ -13,7 +13,7 @@ func ProvideRoutes(rest *Handler) *chi.Mux {
 		middleware.RequestID,
 		middleware.RealIP,
 	)
-	router.Mount("/records", restRoutes(rest))
+	router.Mount("/auth", restRoutes(rest))
 	return router
 }
 

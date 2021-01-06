@@ -19,8 +19,8 @@ func ProvideRoutes(rest *Handler) *chi.Mux {
 
 func restRoutes(rest *Handler) (r *chi.Mux) {
 	r = chi.NewRouter()
-	// r.Use(rest.auth.Authenticator)
-	// r.Use(rest.auth.Authorizer)
+	r.Use(rest.auth.Authenticator)
+	r.Use(rest.auth.Authorizer)
 	r.Get("/{recordID}", rest.Get)
 	r.Post("/", rest.Post)
 	r.Patch("/", rest.Patch)

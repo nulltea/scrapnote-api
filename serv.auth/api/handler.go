@@ -13,11 +13,11 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/pkg/errors"
 	"github.com/timoth-y/scrapnote-api/data.users/core/model"
-	"go.kicksware.com/api/service-common/config"
 
 	users "github.com/timoth-y/scrapnote-api/data.users/core/service"
 	usersJson "github.com/timoth-y/scrapnote-api/data.users/usecase/serializer/json"
 
+	"github.com/timoth-y/scrapnote-api/serv.auth/config"
 	"github.com/timoth-y/scrapnote-api/serv.auth/core/meta"
 	"github.com/timoth-y/scrapnote-api/serv.auth/core/service"
 )
@@ -27,10 +27,10 @@ type Handler struct {
 	contentType string
 }
 
-func NewHandler(service service.AuthService, config config.CommonConfig) *Handler {
+func NewHandler(service service.AuthService, config config.ServiceConfig) *Handler {
 	return &Handler{
 		service,
-		config.ContentType,
+		config.Common.ContentType,
 	}
 }
 
@@ -39,12 +39,11 @@ func (h *Handler) SingUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	token, err := h.service.SingUp(user); if err != nil {
+	err = h.service.SingUp(user); if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	h.setupAuthCookie(w, token)
-	h.setupResponse(w, token, http.StatusOK)
+	h.setupResponse(w, nil, http.StatusOK)
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {

@@ -21,7 +21,6 @@ type AuthConfig struct {
 	TokenExpirationDelta int    `yaml:"tokenExpirationDelta"`
 	PrivateKeyPath       string `yaml:"privateKeyPath"`
 	PublicKeyPath        string `yaml:"publicKeyPath"`
-	AccessKey            string `yaml:"accessKey"`
 }
 
 func ReadServiceConfig(filename string) (sc ServiceConfig, err error) {

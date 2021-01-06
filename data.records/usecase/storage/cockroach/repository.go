@@ -19,6 +19,10 @@ type repository struct {
 	table string
 }
 
+func (r repository) RetrieveAll() ([]*model.Record, error) {
+	panic("implement me")
+}
+
 func NewRepository(config config.DataStoreConfig) (repo.RecordRepository, error) {
 	db, err := newClient(config.URL)
 	if err != nil {

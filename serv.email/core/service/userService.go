@@ -10,6 +10,4 @@ type UserService interface {
 	Create(user *model.User) error
 	Modify(user *model.User) error
 	Delete(user *model.User) error
-	Verify(user *model.User) error
-	Confirm(userID, token string) error
 }

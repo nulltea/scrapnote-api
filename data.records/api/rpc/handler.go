@@ -32,17 +32,19 @@ func NewHandler(repo repo.RecordRepository) *Handler {
 }
 
 func (h Handler) Get(ctx context.Context, filter *proto.RecordFilter) (r *proto.RecordResponse, err error) {
-	var users []*model.Record
+	var records []*model.Record
 
 	if len(filter.RecordID) > 0 {
-		users, err = h.repo.Retrieve(filter.RecordID)
+		records, err = h.repo.Retrieve(filter.RecordID)
 	} else if len(filter.TopicID) > 0 {
-		users, err = h.repo.RetrieveBy(filter.TopicID)
+		records, err = h.repo.RetrieveBy(filter.TopicID)
+	} else {
+		records, err = h.repo.RetrieveAll()
 	}
 
 	r = &proto.RecordResponse{
-		Records: proto.NativeToRecords(users),
-		Count: int64(len(users)),
+		Records: proto.NativeToRecords(records),
+		Count: int64(len(records)),
 	}
 	return
 }
