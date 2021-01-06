@@ -1,14 +1,16 @@
 package async
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 
 	"github.com/golang/glog"
 	"github.com/rs/xid"
-	"github.com/streadway/amqp"
 	"go.kicksware.com/api/service-common/api/events"
+	"go.kicksware.com/api/service-common/api/rest"
 	"go.kicksware.com/api/service-common/core"
+	"go.kicksware.com/api/service-common/core/errors"
+	"go.kicksware.com/api/service-common/core/meta"
 
 	"github.com/timoth-y/scrapnote-api/data.records/config"
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
@@ -47,12 +49,17 @@ func (h *handler) Serve() error {
 	return err
 }
 
-func (h *handler) addHandler(msg amqp.Delivery) bool {
-	record, ok := getRecord(msg.Body); if !ok {
+func (h *handler) addHandler(ctx context.Context, msg interface{}) bool {
+	record, ok := msg.(*model.Record); if !ok {
+		return false
+	}
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		h.errors <- errors.ErrUserContextInfoMissing
 		return false
 	}
 	record.UniqueID = xid.New().String()
-	if err := h.repo.Store(record); err != nil {
+	record.UserID = user.UniqueID
+	if err := h.repo.Store(ctx, record); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -60,11 +67,19 @@ func (h *handler) addHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) updateHandler(msg amqp.Delivery) bool {
-	record, ok := getRecord(msg.Body); if !ok {
+func (h *handler) updateHandler(ctx context.Context, msg interface{}) bool {
+	record, ok := msg.(*model.Record); if !ok {
 		return false
 	}
-	if err := h.repo.Modify(record); err != nil {
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		h.errors <- errors.ErrUserContextInfoMissing
+		return false
+	}
+	if record.UniqueID != user.UniqueID {
+		h.errors <- errors.ErrWrongUserContext
+		return false
+	}
+	if err := h.repo.Modify(ctx, record); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -72,23 +87,22 @@ func (h *handler) updateHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) deleteHandler(msg amqp.Delivery) bool {
-	record, ok := getRecord(msg.Body); if !ok {
+func (h *handler) deleteHandler(ctx context.Context, msg interface{}) bool {
+	record, ok := msg.(*model.Record); if !ok {
 		return false
 	}
-	if err := h.repo.Remove(record.UniqueID); err != nil {
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		h.errors <- errors.ErrUserContextInfoMissing
+		return false
+	}
+	if record.UniqueID != user.UniqueID {
+		h.errors <- errors.ErrWrongUserContext
+		return false
+	}
+	if err := h.repo.Remove(ctx, record.UniqueID); err != nil {
 		h.errors <- err
 		return false
 	}
 	fmt.Printf("delete event handled for: %q\n", record.Content)
 	return true
-}
-
-func getRecord(data []byte) (*model.Record, bool) {
-	var rec *model.Record
-	if err := json.Unmarshal(data, &rec); err != nil {
-		glog.Errorln(err)
-		return nil, false
-	}
-	return rec, true
 }

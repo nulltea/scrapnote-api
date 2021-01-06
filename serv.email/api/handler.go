@@ -1,11 +1,10 @@
 package api
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 
 	"github.com/golang/glog"
-	"github.com/streadway/amqp"
 	"go.kicksware.com/api/service-common/api/events"
 	"go.kicksware.com/api/service-common/core"
 
@@ -46,12 +45,11 @@ func (h *handler) Serve() error {
 	return err
 }
 
-func (h *handler) verifyHandler(msg amqp.Delivery) bool {
-	request, ok := getRequestBody(msg.Body); if !ok {
+func (h *handler) verifyHandler(ctx context.Context, msg interface{}) bool {
+	request, ok := msg.(*model.EmailRequest); if !ok {
 		return false
 	}
-
-	if err := h.service.SendEmailConfirmation(request.Email, request.CallbackURL); err != nil {
+	if err := h.service.SendEmailConfirmation(ctx, request.Email, request.CallbackURL); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -59,12 +57,11 @@ func (h *handler) verifyHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) resetHandler(msg amqp.Delivery) bool {
-	request, ok := getRequestBody(msg.Body); if !ok {
+func (h *handler) resetHandler(ctx context.Context, msg interface{}) bool {
+	request, ok := msg.(*model.EmailRequest); if !ok {
 		return false
 	}
-
-	if err := h.service.SendResetPassword(request.Email, request.CallbackURL); err != nil {
+	if err := h.service.SendResetPassword(ctx, request.Email, request.CallbackURL); err != nil {
 		h.errors <- err
 		return false
 	}
@@ -72,24 +69,14 @@ func (h *handler) resetHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) notifyHandler(msg amqp.Delivery) bool {
-	request, ok := getRequestBody(msg.Body); if !ok {
+func (h *handler) notifyHandler(ctx context.Context, msg interface{}) bool {
+	request, ok := msg.(*model.EmailRequest); if !ok {
 		return false
 	}
-
-	if err := h.service.SendNotification(request.Email, request.Content); err != nil {
+	if err := h.service.SendNotification(ctx, request.Email, request.Content); err != nil {
 		h.errors <- err
 		return false
 	}
 	fmt.Printf("notify user event handled for: %q\n", request.Email)
 	return true
-}
-
-func getRequestBody(data []byte) (*model.EmailRequest, bool) {
-	var rec *model.EmailRequest
-	if err := json.Unmarshal(data, &rec); err != nil {
-		glog.Errorln(err)
-		return nil, false
-	}
-	return rec, true
 }

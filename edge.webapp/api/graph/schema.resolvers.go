@@ -18,7 +18,7 @@ func (r *mutationResolver) ModifyRecord(ctx context.Context, input model.RecordI
 }
 
 func (r *queryResolver) Records(ctx context.Context, topic string) ([]*native.Record, error) {
-	return r.records.GetAll()
+	return r.records.GetAll(ctx)
 }
 
 func (r *recordResolver) TopicID(ctx context.Context, obj *native.Record) (string, error) {

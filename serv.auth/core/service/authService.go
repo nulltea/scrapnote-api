@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"crypto/rsa"
 	"errors"
 
@@ -18,11 +19,11 @@ var (
 )
 
 type AuthService interface {
-	SingUp(user *model.User) error
-	Login(user *model.User) (*meta.AuthToken, error)
-	Remote(user *model.User) (*meta.AuthToken, error)
-	GenerateToken(user *model.User) (*meta.AuthToken, error)
-	Refresh(token string) (*meta.AuthToken, error)
+	SingUp(ctx context.Context, user *model.User) error
+	Login(ctx context.Context, user *model.User) (*meta.AuthToken, error)
+	Remote(ctx context.Context, user *model.User) (*meta.AuthToken, error)
+	GenerateToken(ctx context.Context, user *model.User) (*meta.AuthToken, error)
+	Refresh(ctx context.Context, token string) (*meta.AuthToken, error)
 	PublicKey() *rsa.PublicKey
-	Logout(token string) error
+	Logout(ctx context.Context, token string) error
 }

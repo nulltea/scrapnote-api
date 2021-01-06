@@ -1,11 +1,10 @@
 package async
 
 import (
-	"encoding/json"
+	"context"
 	"fmt"
 
 	"github.com/golang/glog"
-	"github.com/streadway/amqp"
 	"go.kicksware.com/api/service-common/api/events"
 	"go.kicksware.com/api/service-common/core"
 
@@ -46,8 +45,8 @@ func (h *handler) Serve() error {
 	return err
 }
 
-func (h *handler) addHandler(msg amqp.Delivery) bool {
-	user, ok := getUser(msg.Body); if !ok {
+func (h *handler) addHandler(ctx context.Context, msg interface{}) bool {
+	user, ok := msg.(*model.User); if !ok {
 		return false
 	}
 	if err := h.repo.Store(user); err != nil {
@@ -58,8 +57,8 @@ func (h *handler) addHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) updateHandler(msg amqp.Delivery) bool {
-	user, ok := getUser(msg.Body); if !ok {
+func (h *handler) updateHandler(ctx context.Context, msg interface{}) bool {
+	user, ok := msg.(*model.User); if !ok {
 		return false
 	}
 	if err := h.repo.Modify(user); err != nil {
@@ -70,8 +69,8 @@ func (h *handler) updateHandler(msg amqp.Delivery) bool {
 	return true
 }
 
-func (h *handler) deleteHandler(msg amqp.Delivery) bool {
-	user, ok := getUser(msg.Body); if !ok {
+func (h *handler) deleteHandler(ctx context.Context, msg interface{}) bool {
+	user, ok := msg.(*model.User); if !ok {
 		return false
 	}
 	if err := h.repo.Remove(user.UniqueID); err != nil {
@@ -80,13 +79,4 @@ func (h *handler) deleteHandler(msg amqp.Delivery) bool {
 	}
 	fmt.Printf("delete event handled for: %q\n", user.Username)
 	return true
-}
-
-func getUser(data []byte) (*model.User, bool) {
-	var rec *model.User
-	if err := json.Unmarshal(data, &rec); err != nil {
-		glog.Errorln(err)
-		return nil, false
-	}
-	return rec, true
 }

@@ -1,13 +1,17 @@
 package service
 
-import "github.com/timoth-y/scrapnote-api/data.users/core/model"
+import (
+	"context"
+
+	"github.com/timoth-y/scrapnote-api/data.users/core/model"
+)
 
 type UserService interface {
-	Fetch(ids []string) ([]*model.User, error)
-	FetchOne(id string) (*model.User, error)
-	FetchByEmail(email string) (*model.User, error)
-	FetchByUsername(username string) (*model.User, error)
-	Create(user *model.User) error
-	Modify(user *model.User) error
-	Delete(user *model.User) error
+	Fetch(ctx context.Context, ids []string) ([]*model.User, error)
+	FetchOne(ctx context.Context, id string) (*model.User, error)
+	FetchByEmail(ctx context.Context, email string) (*model.User, error)
+	FetchByUsername(ctx context.Context, username string) (*model.User, error)
+	Create(ctx context.Context, user *model.User) error
+	Modify(ctx context.Context, user *model.User) error
+	Delete(ctx context.Context, user *model.User) error
 }

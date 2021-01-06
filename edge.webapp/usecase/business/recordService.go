@@ -27,8 +27,8 @@ func NewRecordService(config config.ServiceConfig, serializer core.Serializer) s
 	}
 }
 
-func (s *recordService) GetOne(id string) (*model.Record, error) {
-	ctx, cancel := context.WithCancel(context.Background())
+func (s *recordService) GetOne(ctx context.Context, id string) (*model.Record, error) {
+	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	resp, err := s.remote.Get(ctx, &proto.RecordFilter {
@@ -40,8 +40,8 @@ func (s *recordService) GetOne(id string) (*model.Record, error) {
 	return resp.Records[0].ToNative(), nil
 }
 
-func (s *recordService) GetAll() ([]*model.Record, error) {
-	ctx, cancel := context.WithCancel(context.Background())
+func (s *recordService) GetAll(ctx context.Context) ([]*model.Record, error) {
+	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	resp, err := s.remote.Get(ctx, &proto.RecordFilter{})
@@ -52,8 +52,8 @@ func (s *recordService) GetAll() ([]*model.Record, error) {
 	return proto.RecordsToNative(resp.Records), nil
 }
 
-func (s *recordService) GetFrom(topic string) ([]*model.Record, error) {
-	ctx, cancel := context.WithCancel(context.Background())
+func (s *recordService) GetFrom(ctx context.Context, topic string) ([]*model.Record, error) {
+	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
 	resp, err := s.remote.Get(ctx, &proto.RecordFilter {
@@ -65,14 +65,14 @@ func (s *recordService) GetFrom(topic string) ([]*model.Record, error) {
 	return proto.RecordsToNative(resp.Records), nil
 }
 
-func (s *recordService) Add(record *model.Record) error {
-	return s.events.Emmit("records.add", record)
+func (s *recordService) Add(ctx context.Context, record *model.Record) error {
+	return s.events.Emmit(ctx, "records.add", record)
 }
 
-func (s *recordService) Update(record *model.Record) error {
-	return s.events.Emmit("records.update", record)
+func (s *recordService) Update(ctx context.Context, record *model.Record) error {
+	return s.events.Emmit(ctx, "records.update", record)
 }
 
-func (s *recordService) Delete(id string) error {
-	return s.events.Emmit("records.delete", id)
+func (s *recordService) Delete(ctx context.Context, id string) error {
+	return s.events.Emmit(ctx, "records.delete", id)
 }

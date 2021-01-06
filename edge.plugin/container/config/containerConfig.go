@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go.kicksware.com/api/service-common/api/rest"
 	"go.kicksware.com/api/service-common/container"
 	"go.kicksware.com/api/service-common/core"
 
@@ -13,6 +14,7 @@ import (
 func ConfigureContainer(container container.ServiceContainer, config config.ServiceConfig) {
 	container.BindInstance(config).
 		BindSingleton(func() core.Serializer { return json.NewSerializer()}).
+		BindSingleton(func() core.AuthService { return rest.NewAuthService(config.Auth)})
 		BindSingleton(business.NewRecordService).
 
 		BindSingleton(factory.ProvideEdgeHandler).

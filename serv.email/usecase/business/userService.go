@@ -27,7 +27,7 @@ func NewUserService(config config.ServiceConfig, serializer core.Serializer) ser
 	}
 }
 
-func (s *userService) Fetch(ids []string) ([]*model.User, error) {
+func (s *userService) Fetch(ctx context.Context, ids []string) ([]*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ UserID: ids })
@@ -37,7 +37,7 @@ func (s *userService) Fetch(ids []string) ([]*model.User, error) {
 	return proto.UsersToNative(resp.Users), nil
 }
 
-func (s *userService) FetchOne(id string) (*model.User, error) {
+func (s *userService) FetchOne(ctx context.Context, id string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ UserID: []string { id } })
@@ -47,7 +47,7 @@ func (s *userService) FetchOne(id string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) FetchByEmail(email string) (*model.User, error) {
+func (s *userService) FetchByEmail(ctx context.Context, email string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ Email: []string { email } })
@@ -57,7 +57,7 @@ func (s *userService) FetchByEmail(email string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) FetchByUsername(username string) (*model.User, error) {
+func (s *userService) FetchByUsername(ctx context.Context, username string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ Username: []string { username } })
@@ -67,14 +67,14 @@ func (s *userService) FetchByUsername(username string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) Create(user *model.User) error {
-	return s.events.Emmit("users.add", user)
+func (s *userService) Create(ctx context.Context, user *model.User) error {
+	return s.events.Emmit(ctx, "users.add", user)
 }
 
-func (s *userService) Modify(user *model.User) error {
-	return s.events.Emmit("users.update", user)
+func (s *userService) Modify(ctx context.Context, user *model.User) error {
+	return s.events.Emmit(ctx, "users.update", user)
 }
 
-func (s *userService) Delete(user *model.User) error {
-	return s.events.Emmit("users.delete", user)
+func (s *userService) Delete(ctx context.Context, user *model.User) error {
+	return s.events.Emmit(ctx, "users.delete", user)
 }

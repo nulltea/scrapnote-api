@@ -10,7 +10,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/timoth-y/scrapnote-api/data.records v0.0.0-20201227143107-79f53e8988d1
 	github.com/vektah/gqlparser/v2 v2.1.0
-	go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9
+	go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76
 	google.golang.org/grpc v1.32.0
 	gopkg.in/yaml.v2 v2.4.0
 )

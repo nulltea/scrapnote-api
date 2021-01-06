@@ -1,7 +1,9 @@
 package service
 
+import "context"
+
 type MailService interface {
-	SendEmailConfirmation(email, callbackURL string) error
-	SendResetPassword(email, callbackURL string) error
-	SendNotification(email, notificationContent string) error
+	SendEmailConfirmation(ctx context.Context, email, callbackURL string) error
+	SendResetPassword(ctx context.Context, email, callbackURL string) error
+	SendNotification(ctx context.Context, email, notificationContent string) error
 }

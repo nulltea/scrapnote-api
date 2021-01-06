@@ -2,6 +2,7 @@ package business
 
 import (
 	"bufio"
+	"context"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/json"
@@ -37,18 +38,18 @@ func NewAuthServiceJWT(userService service.UserService, config config.ServiceCon
 	}
 }
 
-func (s *authService) SingUp(user *model.User) error {
-	if err := s.userService.Create(user); err != nil {
+func (s *authService) SingUp(ctx context.Context, user *model.User) error {
+	if err := s.userService.Create(ctx, user); err != nil {
 		return err
 	}
-	if err := s.userService.Verify(user); err != nil {
+	if err := s.userService.Verify(ctx, user); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *authService) Login(user *model.User) (*meta.AuthToken, error) {
-	registered, err := s.userService.FetchByEmail(user.Email); if err != nil || registered == nil {
+func (s *authService) Login(ctx context.Context, user *model.User) (*meta.AuthToken, error) {
+	registered, err := s.userService.FetchByEmail(ctx, user.Email); if err != nil || registered == nil {
 		return nil, err
 	}
 
@@ -59,10 +60,10 @@ func (s *authService) Login(user *model.User) (*meta.AuthToken, error) {
 		return nil, service.ErrNotConfirmed
 	}
 
-	return s.GenerateToken(registered)
+	return s.GenerateToken(ctx, registered)
 }
 
-func (s *authService) Remote(user *model.User) (*meta.AuthToken, error) {
+func (s *authService) Remote(ctx context.Context, user *model.User) (*meta.AuthToken, error) {
 	// if user == nil || len(user.UniqueID) == 0 {
 	// 	return nil, service.ErrInvalidRemoteID
 	// } else if len(user.Provider) == 0 || user.Provider == model.Internal {
@@ -82,14 +83,14 @@ func (s *authService) Remote(user *model.User) (*meta.AuthToken, error) {
 	// 		return s.GenerateToken(connected)
 	// 	}
 	// }
-	if err := s.SingUp(user); err != nil {
+	if err := s.SingUp(ctx, user); err != nil {
 		return nil, err
 	}
 
-	return s.GenerateToken(user)
+	return s.GenerateToken(ctx, user)
 }
 
-func (s *authService) GenerateToken(user *model.User) (*meta.AuthToken, error) {
+func (s *authService) GenerateToken(ctx context.Context, user *model.User) (*meta.AuthToken, error) {
 	token := jwt.New(jwt.SigningMethodRS512)
 	expiresAt := time.Now().Add(time.Hour * time.Duration(s.expirationDelta))
 	token.Claims = &meta.AuthClaims {
@@ -106,18 +107,18 @@ func (s *authService) GenerateToken(user *model.User) (*meta.AuthToken, error) {
 	return meta.NewAuthToken(tokenString, expiresAt), nil
 }
 
-func (s *authService) Refresh(raw string) (*meta.AuthToken, error) {
+func (s *authService) Refresh(ctx context.Context, raw string) (*meta.AuthToken, error) {
 	token, _ := s.parse(raw); if token == nil {
 		return nil, service.ErrTokenInvalid
 	}
 	claims, err := GetClaims(token); if err != nil {
 		return nil, service.ErrTokenInvalid
 	}
-	user, err := s.userService.FetchOne(claims.UniqueID); if err != nil {
+	user, err := s.userService.FetchOne(ctx, claims.UniqueID); if err != nil {
 		return nil, service.ErrTokenInvalid
 	}
 
-	return s.GenerateToken(user)
+	return s.GenerateToken(ctx, user)
 }
 
 
@@ -125,7 +126,7 @@ func (s *authService) PublicKey() *rsa.PublicKey {
 	return s.publicKey
 }
 
-func (s *authService) Logout(token string) error {
+func (s *authService) Logout(ctx context.Context, token string) error {
 	return nil
 }
 

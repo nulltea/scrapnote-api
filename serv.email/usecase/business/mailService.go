@@ -2,6 +2,7 @@ package business
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"fmt"
 	"html/template"
@@ -56,8 +57,8 @@ func newEmailAuth(config config.MailConfig) smtp.Auth {
 	return smtp.PlainAuth("", config.Address, config.Password, host)
 }
 
-func (s *mailService) SendEmailConfirmation(email, callbackURL string) error { //
-	user, err := s.userService.FetchByEmail(email); if err != nil {
+func (s *mailService) SendEmailConfirmation(ctx context.Context, email, callbackURL string) error { //
+	user, err := s.userService.FetchByEmail(ctx, email); if err != nil {
 		return err
 	}
 	values := map[string]string{
@@ -69,8 +70,8 @@ func (s *mailService) SendEmailConfirmation(email, callbackURL string) error { /
 	return s.sendMail("Account verification", msg, user.Email)
 }
 
-func (s *mailService) SendResetPassword(email, callbackURL string) error {
-	user, err := s.userService.FetchByEmail(email); if err != nil {
+func (s *mailService) SendResetPassword(ctx context.Context, email, callbackURL string) error {
+	user, err := s.userService.FetchByEmail(ctx, email); if err != nil {
 		return err
 	}
 	values := map[string]string{
@@ -82,7 +83,7 @@ func (s *mailService) SendResetPassword(email, callbackURL string) error {
 	return s.sendMail("Password reset", msg, user.Email)
 }
 
-func (s *mailService) SendNotification(userID, notificationContent string) error {
+func (s *mailService) SendNotification(ctx context.Context, userID, notificationContent string) error {
 	panic("implement me")
 }
 

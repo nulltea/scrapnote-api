@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"go.kicksware.com/api/service-common/api/rest"
 	"go.kicksware.com/api/service-common/config"
+	commonErrors "go.kicksware.com/api/service-common/core/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -17,6 +19,7 @@ import (
 	"github.com/golang/glog"
 	"go.kicksware.com/api/service-common/core/meta"
 
+	"github.com/timoth-y/scrapnote-api/data.records/api/rpc/proto"
 	"github.com/timoth-y/scrapnote-api/data.records/core/model"
 	"github.com/timoth-y/scrapnote-api/data.records/core/repo"
 )
@@ -72,11 +75,16 @@ func newTLSConfig(tlsConfig *meta.TLSCertificate) *tls.Config {
 	}
 }
 
-func (r repository) Retrieve(ids []string) ([]*model.Record, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r repository) Retrieve(ctx context.Context, ids []string) ([]*model.Record, error) {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
-
-	query := r.buildQueryPipeline(bson.M{ "unique_id": bson.M{ "$in": ids } })
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		return nil, commonErrors.ErrUserContextInfoMissing
+	}
+	query := r.buildQueryPipeline(bson.M{
+		"unique_id": bson.M{ "$in": ids },
+		"user_id": user.UniqueID,
+	})
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
 		return nil, errors.Wrap(err, "repository.Record.Retrieve")
 	}
@@ -95,11 +103,21 @@ func (r repository) Retrieve(ids []string) ([]*model.Record, error) {
 	return orders, nil
 }
 
-func (r repository) RetrieveBy(topic string) ([]*model.Record, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r repository) RetrieveBy(ctx context.Context, filter *proto.RecordFilter) ([]*model.Record, error) {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
-
-	query := r.buildQueryPipeline(bson.M{"topic_id": topic})
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		return nil, commonErrors.ErrUserContextInfoMissing
+	}
+	fields := bson.M{}
+	if filter.RecordID != nil {
+		fields["unique_id"] = filter.RecordID
+	}
+	if len(filter.TopicID) != 0 {
+		fields["topic_id"] = filter.TopicID
+	}
+	fields["user_id"] = user.UniqueID
+	query := r.buildQueryPipeline(fields)
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
 		return nil, errors.Wrap(err, "repository.Record.FetchOne")
 	}
@@ -118,11 +136,13 @@ func (r repository) RetrieveBy(topic string) ([]*model.Record, error) {
 	return orders, nil
 }
 
-func (r repository) RetrieveAll() ([]*model.Record, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r repository) RetrieveAll(ctx context.Context) ([]*model.Record, error) {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
-
-	query := r.buildQueryPipeline(bson.M{})
+	user, ok := ctx.Value(rest.UserContextKey).(meta.UserContextInfo); if !ok {
+		return nil, commonErrors.ErrUserContextInfoMissing
+	}
+	query := r.buildQueryPipeline(bson.M{"user_id": user.UniqueID})
 	cursor, err := r.collection.Aggregate(ctx, query); if err != nil {
 		return nil, errors.Wrap(err, "repository.Record.FetchOne")
 	}
@@ -141,8 +161,8 @@ func (r repository) RetrieveAll() ([]*model.Record, error) {
 	return orders, nil
 }
 
-func (r *repository) Store(record *model.Record) error {
-	ctx, cancel := context.WithTimeout(context.Background(), r.timeout)
+func (r *repository) Store(ctx context.Context, record *model.Record) error {
+	ctx, cancel := context.WithTimeout(ctx, r.timeout)
 	defer cancel()
 	_, err := r.collection.InsertOne(ctx, record)
 	if err != nil {
@@ -151,11 +171,11 @@ func (r *repository) Store(record *model.Record) error {
 	return nil
 }
 
-func (r *repository) Modify(record *model.Record) error {
+func (r *repository) Modify(ctx context.Context, record *model.Record) error {
 	panic("implement me")
 }
 
-func (r *repository) Remove(id string) error {
+func (r *repository) Remove(ctx context.Context, id string) error {
 	panic("implement me")
 }
 

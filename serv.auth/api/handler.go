@@ -39,7 +39,7 @@ func (h *Handler) SingUp(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	err = h.service.SingUp(user); if err != nil {
+	err = h.service.SingUp(r.Context(), user); if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -51,7 +51,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	token, err := h.service.Login(user); if err != nil {
+	token, err := h.service.Login(r.Context(), user); if err != nil {
 		if errors.Cause(err) == service.ErrPasswordInvalid ||
 			errors.Cause(err) == service.ErrNotConfirmed {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
@@ -69,7 +69,7 @@ func (h *Handler) Remote(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	token, err := h.service.Remote(user); if err != nil {
+	token, err := h.service.Remote(r.Context(), user); if err != nil {
 		if errors.Cause(err) == service.ErrInvalidRemoteID {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
@@ -85,7 +85,7 @@ func (h *Handler) Remote(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) RefreshToken(w http.ResponseWriter, r *http.Request) {
-	token, err := h.service.Refresh(chi.URLParam(r,"token")); if err != nil {
+	token, err := h.service.Refresh(r.Context(), chi.URLParam(r,"token")); if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -95,7 +95,7 @@ func (h *Handler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 	token := chi.URLParam(r,"token")
-	if err := h.service.Logout(token); err != nil {
+	if err := h.service.Logout(r.Context(), token); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

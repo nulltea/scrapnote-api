@@ -37,7 +37,7 @@ func NewUserService(config config.ServiceConfig, serializer core.Serializer) ser
 	}
 }
 
-func (s *userService) Fetch(ids []string) ([]*model.User, error) {
+func (s *userService) Fetch(ctx context.Context, ids []string) ([]*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ UserID: ids })
@@ -47,7 +47,7 @@ func (s *userService) Fetch(ids []string) ([]*model.User, error) {
 	return proto.UsersToNative(resp.Users), nil
 }
 
-func (s *userService) FetchOne(id string) (*model.User, error) {
+func (s *userService) FetchOne(ctx context.Context, id string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ UserID: []string { id } })
@@ -57,7 +57,7 @@ func (s *userService) FetchOne(id string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) FetchByEmail(email string) (*model.User, error) {
+func (s *userService) FetchByEmail(ctx context.Context, email string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ Email: []string { email } })
@@ -67,7 +67,7 @@ func (s *userService) FetchByEmail(email string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) FetchByUsername(username string) (*model.User, error) {
+func (s *userService) FetchByUsername(ctx context.Context, username string) (*model.User, error) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	resp, err := s.remote.Get(ctx, &proto.UserFilter{ Username: []string { username } })
@@ -77,26 +77,26 @@ func (s *userService) FetchByUsername(username string) (*model.User, error) {
 	return resp.Users[0].ToNative(), nil
 }
 
-func (s *userService) Create(user *model.User) error {
+func (s *userService) Create(ctx context.Context, user *model.User) error {
 	user.RegisterDate = time.Now()
 	if len(user.UniqueID) < 8 {
 		user.UniqueID = xid.NewWithTime(user.RegisterDate).String()
 	}
 	if len(user.Username) == 0 {
-		s.GenerateUsername(user, false)
+		s.GenerateUsername(ctx, user, false)
 	}
-	return s.events.Emmit("users.add", user)
+	return s.events.Emmit(ctx, "users.add", user)
 }
 
-func (s *userService) Modify(user *model.User) error {
-	return s.events.Emmit("users.update", user)
+func (s *userService) Modify(ctx context.Context, user *model.User) error {
+	return s.events.Emmit(ctx, "users.update", user)
 }
 
-func (s *userService) Delete(user *model.User) error {
-	return s.events.Emmit("users.delete", user)
+func (s *userService) Delete(ctx context.Context, user *model.User) error {
+	return s.events.Emmit(ctx, "users.delete", user)
 }
 
-func (s *userService) Verify(user *model.User) error {
+func (s *userService) Verify(ctx context.Context, user *model.User) error {
 	token := generateToken(user.UniqueID)
 	requestParams := &struct {
 		Email       string
@@ -105,11 +105,11 @@ func (s *userService) Verify(user *model.User) error {
 		Email: user.Email,
 		CallbackURL: fmt.Sprintf("/%v", url.PathEscape(token)),
 	}
-	return s.events.Emmit("email.verify", requestParams)
+	return s.events.Emmit(ctx, "email.verify", requestParams)
 }
 
-func (s *userService) Confirm(userID, token string) error {
-	user, err := s.FetchOne(userID); if err != nil {
+func (s *userService) Confirm(ctx context.Context, userID, token string) error {
+	user, err := s.FetchOne(ctx, userID); if err != nil {
 		return err
 	}
 
@@ -118,28 +118,28 @@ func (s *userService) Confirm(userID, token string) error {
 	}
 
 	user.Confirmed = true
-	if err = s.Modify(user); err != nil {
+	if err = s.Modify(ctx, user); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (s *userService) GenerateUsername(user *model.User, save bool) (string, error) {
+func (s *userService) GenerateUsername(ctx context.Context, user *model.User, save bool) (string, error) {
 	if len(user.Email) == 0 {
 		return "", errors.ErrEmailInvalid
 	}
 	username := strings.Split(user.Email, "@")[0]
-	if another, _ := s.FetchByUsername(username); another != nil {
+	if another, _ := s.FetchByUsername(ctx, username); another != nil {
 		baseUsername := username
 		for another != nil {
 			rand.Seed(user.RegisterDate.Unix())
 			username = fmt.Sprintf("%v_%v", baseUsername, strconv.Itoa(rand.Int())[:3])
-			another, _ = s.FetchByUsername(username)
+			another, _ = s.FetchByUsername(ctx, username)
 		}
 	}
 	user.Username = username
 	if save {
-		if err := s.Modify(user); err != nil {
+		if err := s.Modify(ctx, user); err != nil {
 			return "", err
 		}
 	}

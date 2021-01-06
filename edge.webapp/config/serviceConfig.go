@@ -11,6 +11,7 @@ import (
 
 type ServiceConfig struct {
 	Common config.CommonConfig     `yaml:"commonConfig"`
+	Auth   config.AuthConfig       `yaml:"authConfig"`
 	Events config.ConnectionConfig `yaml:"eventsConfig"`
 	RPC    config.ConnectionConfig `yaml:"rpcConfig"`
 }

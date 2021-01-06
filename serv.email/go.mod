@@ -7,6 +7,6 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/streadway/amqp v1.0.0
 	github.com/timoth-y/scrapnote-api/data.users v0.0.0-20201230110128-f21c5277c246
-	go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9
+	go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76
 	gopkg.in/yaml.v2 v2.4.0
 )

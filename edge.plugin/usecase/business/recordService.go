@@ -32,13 +32,13 @@ func (s *recordService) Get(ctx context.Context, topic string) ([]*model.Record,
 }
 
 func (s *recordService) Add(ctx context.Context, record *model.Record) error {
-	return s.events.Emmit("records.add", record)
+	return s.events.Emmit(ctx,"records.add", record)
 }
 
 func (s *recordService) Update(ctx context.Context, record *model.Record) error {
-	return s.events.Emmit("records.update", record)
+	return s.events.Emmit(ctx,"records.update", record)
 }
 
 func (s *recordService) Delete(ctx context.Context, id string) error {
-	return s.events.Emmit("records.delete", id)
+	return s.events.Emmit(ctx, "records.delete", id)
 }

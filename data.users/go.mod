@@ -8,7 +8,7 @@ require (
 	github.com/golang/protobuf v1.4.2
 	github.com/pkg/errors v0.9.1
 	github.com/streadway/amqp v1.0.0
-	go.kicksware.com/api/service-common v0.0.0-20201203221549-a4297bca88b9
+	go.kicksware.com/api/service-common v0.0.0-20201224123354-f7eef77daa76
 	go.mongodb.org/mongo-driver v1.4.4
 	google.golang.org/grpc v1.32.0
 	google.golang.org/protobuf v1.25.0

@@ -33,7 +33,7 @@ func NewHandler(service service.RecordService, auth core.AuthService, config con
 
 func (h *Handler) Get(w http.ResponseWriter, r *http.Request) {
 	code := chi.URLParam(r,"recordID")
-	order, err := h.service.GetOne(code); if err != nil {
+	order, err := h.service.GetOne(r.Context(), code); if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -46,7 +46,7 @@ func (h *Handler) Post(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	err = h.service.Add(order)
+	err = h.service.Add(r.Context(), order)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -60,7 +60,7 @@ func (h *Handler) Patch(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = h.service.Update(order)
+	err = h.service.Update(r.Context(), order)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

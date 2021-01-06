@@ -1,12 +1,17 @@
 package repo
 
-import "github.com/timoth-y/scrapnote-api/data.records/core/model"
+import (
+	"context"
+
+	"github.com/timoth-y/scrapnote-api/data.records/api/rpc/proto"
+	"github.com/timoth-y/scrapnote-api/data.records/core/model"
+)
 
 type RecordRepository interface {
-	Retrieve(ids []string) ([]*model.Record, error)
-	RetrieveBy(topic string) ([]*model.Record, error)
-	RetrieveAll() ([]*model.Record, error)
-	Store(record *model.Record) error
-	Modify(record *model.Record) error
-	Remove(id string)  error
+	Retrieve(ctx context.Context, ids []string) ([]*model.Record, error)
+	RetrieveBy(ctx context.Context, filter *proto.RecordFilter) ([]*model.Record, error)
+	RetrieveAll(ctx context.Context) ([]*model.Record, error)
+	Store(ctx context.Context, record *model.Record) error
+	Modify(ctx context.Context, record *model.Record) error
+	Remove(ctx context.Context, id string)  error
 }
