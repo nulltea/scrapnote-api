@@ -8,7 +8,9 @@ import (
 	"go.kicksware.com/api/user-service/api/gRPC/proto"
 	"go.kicksware.com/api/user-service/core/meta"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 
 	"github.com/timoth-y/scrapnote-api/lib.common/core"
 	tlsMeta "github.com/timoth-y/scrapnote-api/lib.common/core/meta"
@@ -91,12 +93,7 @@ func (i *AuthClientInterceptor) requestAccessToken(ctx context.Context) (*meta.A
 		return token, nil
 	}
 
-	resp, err := i.authClient.Guest(ctx, i.accessKey()); if err == nil {
-		return resp.ToNative(), nil
-	}
-
-	glog.Errorln(err)
-	return nil, err
+	return nil, status.Error(codes.Unauthenticated, "authenticated failed")
 }
 
 func (i *AuthClientInterceptor) attachToken(ctx context.Context) context.Context {
@@ -121,10 +118,4 @@ func tryRetrieveToken(ctx context.Context) (*meta.AuthToken, bool) {
 		Success: true,
 		Expires: time.Time{},
 	}, true
-}
-
-func (i *AuthClientInterceptor) accessKey() *proto.AccessKey {
-	return &proto.AccessKey{
-		Key: i.authService.AccessKey(),
-	}
 }
